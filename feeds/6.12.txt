@@ -4,4 +4,3 @@ src-git routing https://git.openwrt.org/feed/routing.git
 src-git telephony https://git.openwrt.org/feed/telephony.git
 src-git video https://github.com/openwrt/video.git
 src-git lucky https://github.com/gdy666/luci-app-lucky.git
-src-git adguardhome https://github.com/rufengsuixing/luci-app-adguardhome.git
