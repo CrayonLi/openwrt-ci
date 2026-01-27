@@ -17,12 +17,14 @@ AGH_CORE=$(curl -sL https://api.github.com/repos/AdguardTeam/AdGuardHome/release
 wget -qO- $AGH_CORE | tar xOvz > files/usr/bin/AdGuardHome/AdGuardHome
 chmod +x files/usr/bin/AdGuardHome/AdGuardHome
 
-#添加openclash内核
-mkdir -p files/tmp/etc/openclash/core
-CLASH_META_URL="https://raw.githubusercontent.com/vernesong/OpenClash/core/master/meta/clash-linux-arm64.tar.gz"
-GEOIP_URL="https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geoip.dat"
-GEOSITE_URL="https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geosite.dat"
-wget -qO- $CLASH_META_URL | tar xOvz > files/tmp/etc/openclash/core/clash_meta
-wget -qO- $GEOIP_URL > files/tmp/etc/openclash/GeoIP.dat
-wget -qO- $GEOSITE_URL > files/tmp/etc/openclash/GeoSite.dat
-chmod +x files/tmp/etc/openclash/core/clash*
+# 提取并打包 kmod 软件源
+if [ -f "$BASE_PATH/extract_kmod_repo.sh" ]; then
+  chmod +x "$BASE_PATH/extract_kmod_repo.sh"
+  "$BASE_PATH/extract_kmod_repo.sh" "$BASE_PATH/$BUILD_DIR"
+fi
+# 复制 kmod 压缩包到 firmware 目录，便于发布
+find "$BASE_PATH/$BUILD_DIR/bin/targets/qualcommax/ipq60xx" -name "kmod-repo-*.tar.gz" -exec cp {} "$FIRMWARE_DIR/" \;
+
+if [[ -d $BASE_PATH/action_build ]]; then
+    make clean
+fi
